@@ -16,3 +16,11 @@ Smart Selection: The first call creates Instance 1. The second call creates Inst
 
 Goal: To define a fixed sequence of steps for a process, while allowing subclasses to customize some of those steps.
 How it works: The BankingSystem abstract class defines the transaction pipeline inside the processTransaction() method. This method is final, so no subclass can change the order of steps. Steps that are the same for all transactions (like verifyIdentity() and checkBalance()) are implemented directly in the base class. Steps that differ between transactions (like executeTransfer()) are declared as abstract, so each subclass provides its own version. Hook Method: amlHook() is an empty method in the base class. CashWithdrawal ignores it, but InternationalTransfer overrides it to add an AML fraud screening step between identity verification and balance check.
+
+- Adapter Pattern:
+- 
+Goal: To allow two incompatible interfaces to work together without modifying existing code.
+How it works: The FlightControlSystem is built to work only with the SpeedSensor interface, which expects speed as a decimal in km/h via recordVelocity(double kmh). The legacy ImperialSensor cannot be used directly because it requires speed as an integer in knots and an atmospheric pressure string via logSpeedKnots(int knots, String status).
+The ImperialSensorAdapter bridges this gap. It extends ImperialSensor (Class Adapter approach) and implements SpeedSensor, so it can be used anywhere a SpeedSensor is expected. Inside recordVelocity(), it converts km/h to knots and calls the legacy method — the client never knows the difference. Key design decision: FlightControlSystem holds a SpeedSensor field (interface type, not concrete), so any sensor — modern or adapted legacy — can be plugged in at runtime via replaceSensor().
+
+
