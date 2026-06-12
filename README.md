@@ -29,3 +29,10 @@ Goal: To define a one-to-many dependency between objects so that when one object
 How it works: The BountyDispatcher acts as the central hub (ConcreteSubject) that maintains a list of connected BountyHunter observers. When a new bounty is entered via setTask(), the Dispatcher automatically notifies every hunter on its list. The Netrunner and StreetSamurai classes are ConcreteObservers — they both receive the same notification but can react differently.
 Hunters can connect and disconnect at any time via attach() and detach(). To simulate an injured hunter, the Netrunner is detached mid-simulation and receives no further notifications. The updateFromSatellite() method demonstrates that not every state change needs to trigger a notification — internal updates can happen silently without alerting any observers.
 
+- Visitor Pattern
+
+Goal: To perform different operations on a group of related objects without modifying their classes.
+How it works: The HospitalManagementSystem acts as the central ObjectStructure that maintains a list of all active patient records — NewbornInfants, PostSurgeryAdults, and ElderlyResidents. Each patient class implements the Patient interface and only knows how to accept() a visitor by calling visitor.visit(this).
+The Billing and ResearchDivision classes are ConcreteVisitors. When passed through the system, each applies its own logic per patient type — the Billing department calculates equipment costs while the Research Division collects anonymous recovery statistics. Neither operation touches the patient records themselves.
+Key design decision: Adding a new administrative or medical service requires only a new Visitor class — the core patient records and the HospitalManagementSystem never need to be modified.
+Trade-off: Introducing a new patient type like CriticalCarePatient requires adding a new visit() method to the HospitalVisitor interface and updating every existing ConcreteVisitor — this is the known liability of the Visitor pattern.
